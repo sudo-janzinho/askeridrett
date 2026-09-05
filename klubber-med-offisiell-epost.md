@@ -2,7 +2,7 @@
 
 *Genererad: 2026-08-20*
 *Källa: askeridrett.no undersidor (lokala HTML-filer)*
-*Antal klubbar: 99*
+*Antal klubbar: 76*
 
 Dessa klubbar har en rollbaserad/anonym e-postadress (post@, styret@, leder@, info@ osv.)
 som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att fråga om lov.
@@ -27,9 +27,6 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 ## Asker Cricket Klubb
 - styret@askercricketklubb.no
 
-## Asker Drill
-- styret@askerdrill.no
-
 ## Asker Golfklubb
 - post@askergolf.no
 
@@ -47,15 +44,6 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 ## Asker Karateklubb
 - post@askerkarateklubb.no
 
-## Asker KFUK-KFUM Kulturskole
-- kulturskole@kfuk-kfum.no
-
-## Asker KFUK-KFUM Speidere
-- ledere@askerspeiderne.no
-
-## Asker Kulturskole (alle grener)
-- kulturskolen@asker.kommune.no
-
 ## Asker Motorsportklubb
 - post@askermsk.no
 
@@ -64,13 +52,6 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 
 ## Asker Rideklubb
 - admin@askerrideklubb.no
-
-## Asker Røde Kors - Besøksvenn
-- asker@rodekors.org
-
-## Asker Røde Kors - Hjelpekorps
-- post@askerrkh.no
-- vakt@askerrkh.no
 
 ## Asker Seilforening
 - post@askerseil.no
@@ -117,9 +98,6 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 ## Billingstad IF - Fotball
 - styreleder@billingstadif.no
 
-## Blakstad KFUK-KFUM Speidere
-- post@kmspeider.no
-
 ## Bødalen IF - Fotball og Allidrett
 - post@bodalenidrett.no
 
@@ -128,28 +106,6 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 
 ## Bødalen IF - Skiskyting
 - post@bodalenidrett.no
-
-## Bondi & Vettre Skolekorps
-- arbeidsutvalget@bondiogvettreskolekorps.no
-- korpsleder@bondiogvettreskolekorps.no
-- lopper@bondiogvettreskolekorps.no
-- material@bondiogvettreskolekorps.no
-- okonomi@bondiogvettreskolekorps.no
-- post@bondiogvettreskolekorps.no
-- sosialkomiteen@bondiogvettreskolekorps.no
-- styreleder@bondiogvettreskolekorps.no
-
-## Borgen Skolekorps
-- kasserer@borgenskolekorps.no
-- leder@borgenskolekorps.no
-- lopper@borgenskolekorps.no
-- sekretar@borgenskolekorps.no
-
-## Crossing Borders
-- hei@crossingborders.no
-
-## Dansesonen - Dans
-- post@dansesonen.no
 
 ## Dikemark IF - Fotball
 - fotballstyret@dif.no
@@ -201,14 +157,8 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 ## GUI SK - Karate
 - post@guikarate.no
 
-## Holmen KFUK-KFUM-speidere
-- info@holmenspeiderne.no
-
 ## Holmen Klatreklubb
 - post@holmenklatreklubb.no
-
-## Holmen Skolekorps
-- post@holmenskolekorps.com
 
 ## Holmen Tennisklubb
 - post@holmentennis.no
@@ -273,9 +223,6 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 ## Konglungen Tennisklubb
 - post@konglungentk.no
 
-## Musica Sinfonietta - Asker barne- og ungdomsorkester
-- styret@musicasinfonietta.no
-
 ## Nærsnes og Åros IF - Fotball
 - medlem@naif.no
 - utleie@naif.no
@@ -289,9 +236,6 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 ## Røyken Seilforening
 - post@rsf.no
 
-## Røyken Teatergruppe
-- post@royken-teatergruppe.no
-
 ## Slemmestad IF - Allidrett
 - dagligleder@slemmestadif.no
 
@@ -304,14 +248,8 @@ som inte är kopplad till en privatperson. Dessa kan kontaktas direkt utan att f
 ## Slemmestad IF - Innebandy
 - dagligleder@slemmestadif.no
 
-## Slemmestad KFUK-KFUM-Speiderne
-- post@kmspeider.no
-
 ## Slemmestad og Omegn Turnforening
 - post@slemmestadturn.no
-
-## Slemmestad Skolekorps
-- styret@slemmestadskolekorps.net
 
 ## Søndre Hurum JFF
 - post@shjff.no
