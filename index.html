@@ -1697,8 +1697,8 @@
       // Eksplisitt hoyde pa wrappern gjor at #map blir malbar for Leaflet
       mapWrap.style.height = '560px';
       mapWrap.style.overflow = 'visible';
-      mapWrap.style.margin = '0';
-      mapWrap.style.padding = '0';
+      mapWrap.style.margin = '1rem auto 2rem';
+      mapWrap.style.padding = '0 1rem';
       void mapWrap.offsetHeight;   // tving reflow for Leaflet maaler hoyden
       initMap();
       if (map) map.invalidateSize();
