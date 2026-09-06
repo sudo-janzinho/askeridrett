@@ -1,0 +1,8 @@
+kort: 157 -> 156 (ventet 156)
+EC Play i index: false
+ec-play i index: false
+Skoleband-desc i index: false
+tittel 156: true
+div-balanse: 747 aapne / 747 lukkede (diff 0)
+inline-JS: OK
+junksjon: ...     <a class="cta" href="dikemark-rideklubb.html">Mer info &rarr;</a> |       </div> |     </div> |     <div class="card clickable" ...
