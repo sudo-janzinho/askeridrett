@@ -1228,8 +1228,8 @@
     if (homePos) txt += ' innen ' + maxKm + ' km fra ' + home.value;
     count.textContent = txt;
   }
-  search.addEventListener('input', apply);
-  filter.addEventListener('change', apply);
+  search.addEventListener('input', () => apply());
+  filter.addEventListener('change', () => apply());
   dist.addEventListener('keydown', e => { if (e.key === 'Enter') useDist(); });
   home.addEventListener('keydown', e => { if (e.key === 'Enter') useDist(); });
   apply();
@@ -1292,7 +1292,14 @@
     group.addTo(map);
     if (shown.length > 0) {
       const g = L.featureGroup(shown);
-      if (mapInitialized) { try { map.fitBounds(g.getBounds().pad(0.02), { maxZoom: 14 }); } catch(e){} }
+      if (mapInitialized) { try {
+        if (search.value.trim() || filter.value || (homePos && maxKm)) {
+          map.fitBounds(g.getBounds().pad(0.02), { maxZoom: 14 });
+        } else {
+          const c = [59.71, 10.47];
+          map.setView(c, map.getBoundsZoom(L.latLng(c).toBounds(5000)));
+        }
+      } catch(e){} }
     }
   }
   function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
