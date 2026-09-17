@@ -1259,7 +1259,7 @@
   function initMap() {
     if (mapInitialized) return;
     if (typeof L === 'undefined') { mapEl.innerHTML = '<p style="padding:1rem;">Kart kunne ikke lastes (Leaflet manglet). Listen fungerer som normalt.</p>'; mapWrap.classList.remove('hidden'); return; }
-    map = L.map('map').setView([59.71, 10.47], 12);
+    map = L.map('map').setView([59.825, 10.47], 12);
     map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -1296,7 +1296,7 @@
         if (search.value.trim() || filter.value || (homePos && maxKm)) {
           map.fitBounds(g.getBounds().pad(0.02), { maxZoom: 14 });
         } else {
-          const c = [59.71, 10.47];
+          const c = [59.825, 10.47];
           map.setView(c, map.getBoundsZoom(L.latLng(c).toBounds(5000)));
         }
       } catch(e){} }
