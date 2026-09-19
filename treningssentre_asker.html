@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Treningssentre i Asker - 28 tilbud</title>
+<meta name="description" content="Oversikt over alle treningssentre i Asker kommune - med sok, kart og kontaktinfo.">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+  :root { --blue: #6aa8e0; --dark: #1c3f6e; --light: #f6fafd; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: #222; }
+  header { background: url('askeridrett-fjord-banner.svg') center/cover no-repeat; background-color: var(--blue); color: #000; padding: 3.5rem 1rem 1.5rem; text-align: center; }
+  .kicker { font-size: .85rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #000; opacity: .75; margin-bottom: .3rem; }
+  header h1 { font-size: 1.6rem; margin-bottom: .3rem; }
+  header p { opacity: .9; font-size: .95rem; }
+  .controls { max-width: 900px; margin: 1.2rem auto 0; padding: 0 1rem; display: flex; gap: .6rem; flex-wrap: wrap; }
+  #search { flex: 1; min-width: 200px; padding: .7rem 1rem; font-size: 1rem; border: 2px solid #ccc; border-radius: 8px; }
+  #search:focus, #home:focus { outline: none; border-color: var(--dark); }
+  #home { flex: 1.2; min-width: 200px; padding: .7rem 1rem; font-size: 1rem; border: 2px solid #ccc; border-radius: 8px; }
+  #dist { width: 110px; padding: .7rem; font-size: 1rem; border: 2px solid #ccc; border-radius: 8px; }
+  select { padding: .7rem; font-size: 1rem; border: 2px solid #ccc; border-radius: 8px; background: #fff; }
+  .count { max-width: 900px; margin: .8rem auto 0; padding: 0 1rem; font-size: .85rem; color: #666; }
+  .grid { max-width: 900px; margin: 1rem auto 2rem; padding: 0 1rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1rem; }
+  .card { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); padding: 1rem; overflow: hidden; display: flex; flex-direction: column; }
+  .card.clickable { transition: transform .15s ease, box-shadow .15s ease; cursor: pointer; }
+  .card.clickable:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,.16); }
+  .card-link { display: block; flex: 1; color: inherit; text-decoration: none; }
+  .badge { display: inline-block; margin-bottom: .4rem; font-size: .68rem; font-weight: 700; color: #fff; background: var(--dark); padding: .18rem .55rem; border-radius: 12px; letter-spacing: .02em; }
+  .cta { display: inline-block; font-size: .85rem; font-weight: 700; color: var(--dark); }
+  .card.clickable:hover .cta { text-decoration: underline; }
+  .card h3 { font-size: 1.05rem; color: var(--dark); margin-bottom: .4rem; }
+  .card h3 a { color: var(--dark); text-decoration: none; }
+  .card h3 a:hover { text-decoration: underline; }
+  .activity-title { font-size: .95rem; font-weight: 700; color: #333; margin-bottom: .4rem; }
+  .dist-badge { display: inline-block; margin-top: .4rem; font-size: .75rem; font-weight: 600; color: #0a7d33; background: #e6f6ec; padding: .15rem .5rem; border-radius: 12px; }
+  .desc { font-size: .82rem; color: #555; margin-top: .6rem; line-height: 1.5; }
+  .hidden { display: none !important; }
+  /* Kartbeholder: skjult visuelt, men ~beholder høyde~ så Leaflet kan måle den ved init. */
+  .map-collapsed { height: 0; overflow: hidden; padding: 0; margin: 0 !important; }
+  footer { text-align: center; padding: 1.5rem; color: #888; font-size: .8rem; }
+  /* --- Kartvisning --- */
+  .view-switch { display: inline-flex; gap: .25rem; background: #eef3f9; border: 1px solid #d8e2ee; border-radius: 24px; padding: .25rem; }
+  .view-switch button { border: none; background: transparent; color: var(--dark); font-size: .85rem; font-weight: 600; padding: .45rem 1.1rem; border-radius: 20px; cursor: pointer; }
+  .view-switch button.active { background: #fff; color: var(--dark); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+  #map-wrap { max-width: 1200px; margin: 1rem auto 2rem; padding: 0 1rem; }
+  #map { height: 560px; border-radius: 12px; box-shadow: 0 1px 6px rgba(0,0,0,.15); z-index: 0; }
+  .map-tip { font-size: .82rem; color: #666; margin-top: .4rem; }
+  .leaflet-container { font-family: 'Segoe UI', system-ui, sans-serif; }
+  .popup-club { font-weight: 700; color: var(--dark); }
+  .popup-link { display: inline-block; margin-top: .3rem; font-weight: 600; color: var(--dark); }
+  .cat-legend { max-width: 1200px; margin: .4rem auto 0; padding: 0 1rem; font-size: .75rem; color: #666; display: flex; flex-wrap: wrap; gap: .6rem .9rem; justify-content: center; }
+  .cat-legend span { display: inline-flex; align-items: center; gap: .3rem; }
+  .cat-dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
+  .card-footer { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-top: .6rem; }
+  .side-link { font-size: .85rem; font-weight: 600; color: var(--dark); text-decoration: none; white-space: nowrap; }
+  .side-link:hover { text-decoration: underline; }
+  .club-logo { float: left; width: 60px; height: 60px; max-width: none; object-fit: contain; background: #fff; border: 1px solid #f0f0f0; border-radius: 8px; margin: .1rem .65rem .4rem 0; }
+  .intro { visibility: hidden; }
+  .toolbar { max-width: 900px; margin: .9rem auto 0; padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
+  .toolbar .count { margin: 0; padding: 0; }
+  .dist-badge.dist-ukjent { background: #ececec; color: #777; }
+</style>
+</head>
+<body>
+<header>
+  <p class="kicker">Mellom to fjorder</p>
+  <h1>Treningssentre i Asker</h1>
+  <p class="intro">Finn ditt treningssenter i Asker.</p>
+  <div class="controls">
+    <input id="search" type="text" placeholder="Søk etter navn, sted, adresse…" autocomplete="off">
+    <select id="activity-filter"><option value="">Alle typer</option></select>
+  </div>
+  <div class="controls">
+    <input id="home" type="text" placeholder="Din adresse (f.eks. Asker sentrum)" autocomplete="off">
+    <input id="dist" type="number" min="1" max="200" value="10" placeholder="km" title="Maks avstand i km">
+    <button onclick="useDist()" style="padding:.7rem 1.2rem;font-size:1rem;border:2px solid #fff;background:#fff;color:var(--blue);border-radius:8px;cursor:pointer;font-weight:600;">Søk i nærheten</button>
+    <button onclick="useGeo()" style="padding:.7rem 1.2rem;font-size:1rem;border:2px solid #fff;background:rgba(255,255,255,.18);color:#fff;border-radius:8px;cursor:pointer;font-weight:600;">Bruk min plassering</button>
+    <button onclick="clearFilters()" style="padding:.7rem 1rem;font-size:1rem;border:1px solid rgba(0,0,0,.3);background:rgba(255,255,255,.5);color:#000;border-radius:20px;cursor:pointer;font-weight:600;">Nullstill filter</button>
+  </div>
+</header>
+<div class="toolbar"><div class="view-switch" id="view-switch" role="tablist" aria-label="Visningsmodus">
+    <button type="button" id="btn-list" class="active" role="tab" aria-selected="true">Liste</button>
+    <button type="button" id="btn-map" role="tab" aria-selected="false">Kart</button>
+  </div><div class="count" id="count"></div></div>
+<div class="grid" id="grid"><div class="card clickable" data-name="evo asker sentrum" data-activity="kjede" data-address="bankveien 10, 1383 asker" data-desc="treningssenter i evo-kjeden." data-lat="59.83467761900067" data-lon="10.43253916660127">
+      <a class="card-link" href="evo-asker-sentrum.html"><div class="card-body">
+        <img class="club-logo" src="logos/evo.png" alt="" loading="lazy"><h3>EVO Asker Sentrum</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="evo-asker-sentrum.html">Se senter &rarr;</a><a class="side-link" href="https://evofitness.no/senter/asker-sentrum/" target="_blank" rel="noopener" title="https://evofitness.no/senter/asker-sentrum/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="friskvernaktiv (unicare)" data-activity="rehabilitering" data-address="knud askers vei 20b, 1383 asker" data-desc="rehabilitering og treningstilbud fra unicare." data-lat="59.83635423315184" data-lon="10.434611394392336">
+      <a class="card-link" href="friskvernaktiv.html"><div class="card-body">
+        <img class="club-logo" src="logos/friskvernaktiv.png" alt="" loading="lazy"><h3>FriskvernAktiv (Unicare)</h3>
+        <h4 class="activity-title">Rehabilitering/trening</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="friskvernaktiv.html">Se senter &rarr;</a><a class="side-link" href="https://unicare.no/treningssentre/friskvernaktiv/" target="_blank" rel="noopener" title="https://unicare.no/treningssentre/friskvernaktiv/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="sats asker" data-activity="kjede" data-address="erteløkka 1, 1384 asker" data-desc="treningssenter i sats-kjeden." data-lat="59.834374598882924" data-lon="10.438255215297403">
+      <a class="card-link" href="sats-asker.html"><div class="card-body">
+        <img class="club-logo" src="logos/sats.png" alt="" loading="lazy"><h3>SATS Asker</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="sats-asker.html">Se senter &rarr;</a><a class="side-link" href="https://www.sats.no/treningssenter/asker-og-baerum/asker" target="_blank" rel="noopener" title="https://www.sats.no/treningssenter/asker-og-baerum/asker">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="actic asker" data-activity="kjede" data-address="lensmannslia 4, 1386 asker" data-desc="treningssenter i actic-kjeden." data-lat="59.82763166012002" data-lon="10.434807097355325">
+      <a class="card-link" href="actic-asker.html"><div class="card-body">
+        <img class="club-logo" src="logos/actic.png" alt="" loading="lazy"><h3>Actic Asker</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="actic-asker.html">Se senter &rarr;</a><a class="side-link" href="https://www.actic.no/finn-sentre/gym-asker/asker-lensmannslia/" target="_blank" rel="noopener" title="https://www.actic.no/finn-sentre/gym-asker/asker-lensmannslia/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="feel24 asker (langenga)" data-activity="kjede" data-address="langenga 62, 1386 asker" data-desc="treningssenter i feel24-kjeden." data-lat="59.825515761522915" data-lon="10.452328637187852">
+      <a class="card-link" href="feel24-asker.html"><div class="card-body">
+        <img class="club-logo" src="logos/feel24.png" alt="" loading="lazy"><h3>Feel24 Asker (Langenga)</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feel24-asker.html">Se senter &rarr;</a><a class="side-link" href="https://feel24.no/treningssentre/treningssenter-asker/langenga" target="_blank" rel="noopener" title="https://feel24.no/treningssentre/treningssenter-asker/langenga">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="feel24 heggedal" data-activity="kjede" data-address="heggedalsbakken 6, 1389 heggedal" data-desc="treningssenter i feel24-kjeden." data-lat="59.78648862888706" data-lon="10.43625594374176">
+      <a class="card-link" href="feel24-heggedal.html"><div class="card-body">
+        <img class="club-logo" src="logos/feel24.png" alt="" loading="lazy"><h3>Feel24 Heggedal</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feel24-heggedal.html">Se senter &rarr;</a><a class="side-link" href="https://feel24.no/treningssentre/treningssenter-asker/heggedal" target="_blank" rel="noopener" title="https://feel24.no/treningssentre/treningssenter-asker/heggedal">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="feelgood heggedal" data-activity="kjede" data-address="heggedalsveien 299, 1389 heggedal" data-desc="treningssenter i feelgood-kjeden." data-lat="59.787501969181434" data-lon="10.435406871447313">
+      <a class="card-link" href="feelgood-heggedal.html"><div class="card-body">
+        <img class="club-logo" src="logos/feelgood.png" alt="" loading="lazy"><h3>Feelgood Heggedal</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feelgood-heggedal.html">Se senter &rarr;</a><a class="side-link" href="https://www.feelgood.no/heggedal" target="_blank" rel="noopener" title="https://www.feelgood.no/heggedal">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="feel24 vollen" data-activity="kjede" data-address="vollen marina 34, 1390 vollen" data-desc="treningssenter i feel24-kjeden." data-lat="59.809134787685835" data-lon="10.485287105068185">
+      <a class="card-link" href="feel24-vollen.html"><div class="card-body">
+        <img class="club-logo" src="logos/feel24.png" alt="" loading="lazy"><h3>Feel24 Vollen</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feel24-vollen.html">Se senter &rarr;</a><a class="side-link" href="https://feel24.no/treningssentre/treningssenter-asker/vollen" target="_blank" rel="noopener" title="https://feel24.no/treningssentre/treningssenter-asker/vollen">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="mova nesbru" data-activity="kjede" data-address="fekjan 29, 1394 nesbru" data-desc="treningssenter i mova-kjeden." data-lat="59.862436096153935" data-lon="10.49028798976488">
+      <a class="card-link" href="mova-nesbru.html"><div class="card-body">
+        <img class="club-logo" src="logos/mova.png" alt="" loading="lazy"><h3>MOVA Nesbru</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="mova-nesbru.html">Se senter &rarr;</a><a class="side-link" href="https://www.mova.no/treningssenter/baerum/nesbru" target="_blank" rel="noopener" title="https://www.mova.no/treningssenter/baerum/nesbru">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="nesbru trim &amp; helse" data-activity="frittstende" data-address="holmquistveien 1, 1394 nesbru" data-desc="lokalt treningssenter i nesbru." data-lat="59.86247439474836" data-lon="10.488489691580408">
+      <a class="card-link" href="nesbru-trim-og-helse.html"><div class="card-body">
+        <img class="club-logo" src="logos/nesbru-trim.jpg" alt="" loading="lazy"><h3>Nesbru Trim &amp; Helse</h3>
+        <h4 class="activity-title">Frittstående</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="nesbru-trim-og-helse.html">Se senter &rarr;</a><a class="side-link" href="https://nesbruhelse.no/trening/" target="_blank" rel="noopener" title="https://nesbruhelse.no/trening/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="ordentlig gym" data-activity="frittstende" data-address="nye vakås vei 20, 1395 hvalstad" data-desc="lokalt treningssenter i hvalstad." data-lat="59.8556619948995" data-lon="10.47775530576203">
+      <a class="card-link" href="ordentlig-gym.html"><div class="card-body">
+        <img class="club-logo" src="logos/ordentlig-gym.png" alt="" loading="lazy"><h3>Ordentlig Gym</h3>
+        <h4 class="activity-title">Frittstående</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="ordentlig-gym.html">Se senter &rarr;</a><a class="side-link" href="https://ordentliggym.no/" target="_blank" rel="noopener" title="https://ordentliggym.no/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="treningsverket" data-activity="frittstende" data-address="nye vakås vei 64, 1395 hvalstad" data-desc="lokalt treningssenter i hvalstad." data-lat="59.85256431008202" data-lon="10.477689351418588">
+      <a class="card-link" href="treningsverket.html"><div class="card-body">
+        <img class="club-logo" src="logos/treningsverket.svg" alt="" loading="lazy"><h3>Treningsverket</h3>
+        <h4 class="activity-title">Frittstående</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="treningsverket.html">Se senter &rarr;</a><a class="side-link" href="https://treningsverket.no/" target="_blank" rel="noopener" title="https://treningsverket.no/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="asker squash og fitness" data-activity="frittstende" data-address="nye vakås vei 64, 1395 hvalstad" data-desc="squash- og treningscenter i hvalstad." data-lat="59.85256431008202" data-lon="10.477689351418588">
+      <a class="card-link" href="asker-squash-og-fitness.html"><div class="card-body">
+        <img class="club-logo" src="logos/asker-squash.svg" alt="" loading="lazy"><h3>Asker Squash og Fitness</h3>
+        <h4 class="activity-title">Frittstående</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="asker-squash-og-fitness.html">Se senter &rarr;</a></div>
+    </div>
+<div class="card clickable" data-name="feel24 billingstad" data-activity="kjede" data-address="olav brunborgs vei 4, 1396 billingstad" data-desc="treningssenter i feel24-kjeden." data-lat="59.87103226873638" data-lon="10.486189348228478">
+      <a class="card-link" href="feel24-billingstad.html"><div class="card-body">
+        <img class="club-logo" src="logos/feel24.png" alt="" loading="lazy"><h3>Feel24 Billingstad</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feel24-billingstad.html">Se senter &rarr;</a><a class="side-link" href="https://feel24.no/treningssentre/treningssenter-asker/billingstad" target="_blank" rel="noopener" title="https://feel24.no/treningssentre/treningssenter-asker/billingstad">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="sats billingstad" data-activity="kjede" data-address="billingstadsletta 11, 1396 billingstad" data-desc="treningssenter i sats-kjeden." data-lat="59.877017093891745" data-lon="10.500693179993348">
+      <a class="card-link" href="sats-billingstad.html"><div class="card-body">
+        <img class="club-logo" src="logos/sats.png" alt="" loading="lazy"><h3>SATS Billingstad</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="sats-billingstad.html">Se senter &rarr;</a><a class="side-link" href="https://www.sats.no/treningssenter/asker-og-baerum/billingstad" target="_blank" rel="noopener" title="https://www.sats.no/treningssenter/asker-og-baerum/billingstad">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="sporty trening spikkestad" data-activity="kjede" data-address="nordhagenveien 15 a, 3430 spikkestad" data-desc="treningssenter i sporty-kjeden." data-lat="59.73579327603916" data-lon="10.353486490059476">
+      <a class="card-link" href="sporty-trening-spikkestad.html"><div class="card-body">
+        <img class="club-logo" src="logos/sporty-trening.jpg" alt="" loading="lazy"><h3>Sporty Trening Spikkestad</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="sporty-trening-spikkestad.html">Se senter &rarr;</a><a class="side-link" href="https://www.sportytrening.no/" target="_blank" rel="noopener" title="https://www.sportytrening.no/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="spuvi" data-activity="idrettslag" data-address="rogneveien 10, 3430 spikkestad" data-desc="treningssenter drevet av idrettslaget spuvi." data-lat="59.73879481719128" data-lon="10.348057128507126">
+      <a class="card-link" href="spuvi.html"><div class="card-body">
+        <img class="club-logo" src="logos/spuvi.jpg" alt="" loading="lazy"><h3>SPUVI</h3>
+        <h4 class="activity-title">Idrettslag</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="spuvi.html">Se senter &rarr;</a><a class="side-link" href="https://facebook.com/p/Spuvi-100057414521143/" target="_blank" rel="noopener" title="https://facebook.com/p/Spuvi-100057414521143/">Facebook</a></div>
+    </div>
+<div class="card clickable" data-name="røykenbadet" data-activity="kommunalt senter" data-address="bassengveien 1, 3440 røyken" data-desc="svømmehall og treningssenter i røyken." data-lat="59.74173314116459" data-lon="10.391051135629077">
+      <a class="card-link" href="roykenbadet.html"><div class="card-body">
+        <img class="club-logo" src="logos/roykenbadet.png" alt="" loading="lazy"><h3>Røykenbadet</h3>
+        <h4 class="activity-title">Kommunalt bad/senter</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="roykenbadet.html">Se senter &rarr;</a><a class="side-link" href="https://www.roykenbadet.no/" target="_blank" rel="noopener" title="https://www.roykenbadet.no/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="sats slemmestad" data-activity="kjede" data-address="kirkealleen 1, 3470 slemmestad" data-desc="treningssenter i sats-kjeden." data-lat="59.778253115472296" data-lon="10.485877545434958">
+      <a class="card-link" href="sats-slemmestad.html"><div class="card-body">
+        <img class="club-logo" src="logos/sats.png" alt="" loading="lazy"><h3>SATS Slemmestad</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="sats-slemmestad.html">Se senter &rarr;</a><a class="side-link" href="https://www.sats.no/treningssenter/asker-og-baerum/slemmestad" target="_blank" rel="noopener" title="https://www.sats.no/treningssenter/asker-og-baerum/slemmestad">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="actic slemmestad" data-activity="kjede" data-address="eternitveien 4, 3470 slemmestad" data-desc="treningssenter i actic-kjeden." data-lat="59.785767370665255" data-lon="10.489308129424066">
+      <a class="card-link" href="actic-slemmestad.html"><div class="card-body">
+        <img class="club-logo" src="logos/actic.png" alt="" loading="lazy"><h3>Actic Slemmestad</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="actic-slemmestad.html">Se senter &rarr;</a><a class="side-link" href="https://www.actic.no/finn-sentre/gym-asker/actic-slemmestad/" target="_blank" rel="noopener" title="https://www.actic.no/finn-sentre/gym-asker/actic-slemmestad/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="feel24 slemmestad" data-activity="kjede" data-address="skolebakken 10, 3470 slemmestad" data-desc="treningssenter i feel24-kjeden." data-lat="59.77746770404564" data-lon="10.482258898400037">
+      <a class="card-link" href="feel24-slemmestad.html"><div class="card-body">
+        <img class="club-logo" src="logos/feel24.png" alt="" loading="lazy"><h3>Feel24 Slemmestad</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feel24-slemmestad.html">Se senter &rarr;</a><a class="side-link" href="https://feel24.no/treningssentre/treningssenter-asker/slemmestad" target="_blank" rel="noopener" title="https://feel24.no/treningssentre/treningssenter-asker/slemmestad">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="mova sætre" data-activity="kjede" data-address="åsveien 21, 3475 sætre" data-desc="treningssenter i mova-kjeden." data-lat="59.673385058712036" data-lon="10.524472011932088">
+      <a class="card-link" href="mova-saetre.html"><div class="card-body">
+        <img class="club-logo" src="logos/mova.png" alt="" loading="lazy"><h3>MOVA Sætre</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="mova-saetre.html">Se senter &rarr;</a><a class="side-link" href="https://www.mova.no/treningssenter/saetre" target="_blank" rel="noopener" title="https://www.mova.no/treningssenter/saetre">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="trento røyken &amp; hurum" data-activity="kjede" data-address="åsveien 21, 3475 sætre" data-desc="tidligere trento sætre – treningssenter som nå er en del av mova." data-lat="59.673385058712036" data-lon="10.524472011932088">
+      <a class="card-link" href="trento-royken-og-hurum.html"><div class="card-body">
+        <img class="club-logo" src="logos/mova.png" alt="" loading="lazy"><h3>Trento Røyken &amp; Hurum</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="trento-royken-og-hurum.html">Se senter &rarr;</a><a class="side-link" href="https://www.mova.no/treningssenter/saetre" target="_blank" rel="noopener" title="https://www.mova.no/treningssenter/saetre">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="feelgood sætre" data-activity="kjede" data-address="sætrealleen 4, 3475 sætre" data-desc="treningssenter i feelgood-kjeden." data-lat="59.68194835053132" data-lon="10.528516306983907">
+      <a class="card-link" href="feelgood-saetre.html"><div class="card-body">
+        <img class="club-logo" src="logos/feelgood.png" alt="" loading="lazy"><h3>Feelgood Sætre</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feelgood-saetre.html">Se senter &rarr;</a><a class="side-link" href="https://www.feelgood.no/saetre" target="_blank" rel="noopener" title="https://www.feelgood.no/saetre">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="3475 kraftverket" data-activity="frittstende" data-address="åsveien 3, 3475 sætre" data-desc="lokalt treningssenter på sætre." data-lat="59.66971139133179" data-lon="10.524963888694561">
+      <a class="card-link" href="kraftverket-saetre.html"><div class="card-body">
+        <img class="club-logo" src="logos/kraftverket.png" alt="" loading="lazy"><h3>3475 Kraftverket</h3>
+        <h4 class="activity-title">Frittstående</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="kraftverket-saetre.html">Se senter &rarr;</a><a class="side-link" href="https://3475kraftverket.no/" target="_blank" rel="noopener" title="https://3475kraftverket.no/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="puls1" data-activity="frittstende" data-address="vestre strandvei 5, 3482 tofte" data-desc="lokalt treningssenter i tofte." data-lat="59.5408937231872" data-lon="10.555778968796231">
+      <a class="card-link" href="puls1.html"><div class="card-body">
+        <img class="club-logo" src="logos/puls1.png" alt="" loading="lazy"><h3>Puls1</h3>
+        <h4 class="activity-title">Frittstående</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="puls1.html">Se senter &rarr;</a><a class="side-link" href="https://www.puls1.no/" target="_blank" rel="noopener" title="https://www.puls1.no/">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="feelgood senter tofte" data-activity="kjede" data-address="østre strandvei 4b, 3482 tofte" data-desc="treningssenter i feelgood-kjeden." data-lat="59.541491734776365" data-lon="10.55790603028505">
+      <a class="card-link" href="feelgood-senter-tofte.html"><div class="card-body">
+        <img class="club-logo" src="logos/feelgood.png" alt="" loading="lazy"><h3>Feelgood Senter Tofte</h3>
+        <h4 class="activity-title">Kjede</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="feelgood-senter-tofte.html">Se senter &rarr;</a><a class="side-link" href="https://www.feelgood.no/tofte" target="_blank" rel="noopener" title="https://www.feelgood.no/tofte">Nettside</a></div>
+    </div>
+<div class="card clickable" data-name="holmsbu resort (treningsrom)" data-activity="hotell/treningsrom" data-address="rødtangveien 18, 3484 holmsbu" data-desc="hotell med treningsrom for gjester." data-lat="59.54141866836767" data-lon="10.414554456870523">
+      <a class="card-link" href="holmsbu-resort-treningsrom.html"><div class="card-body">
+        <img class="club-logo" src="logos/holmsbu.png" alt="" loading="lazy"><h3>Holmsbu Resort (treningsrom)</h3>
+        <h4 class="activity-title">Hotell/treningsrom</h4>
+      </div></a>
+      <div class="card-footer"><a class="cta" href="holmsbu-resort-treningsrom.html">Se senter &rarr;</a><a class="side-link" href="https://holmsburesort.no/" target="_blank" rel="noopener" title="https://holmsburesort.no/">Nettside</a></div>
+    </div>
+    </div>
+    <div id="map-wrap" class="hidden">
+      <div class="cat-legend" id="cat-legend"></div>
+      <div id="map"></div>
+      <p class="map-tip">Kartet synkroniserer med søk og filter. Zoom inn for å se hvert enkelt senter. Trykk på en markør for mer info, eller knappen "Søk i nærheten" for å vise sentre rundt deg.</p>
+    </div>
+    <footer>Åpningstider og tilbud kan endres. Sjekk sentrets egen nettside for oppdatert info.</footer>
+<script>
+  const cards = [...document.querySelectorAll('.card')];
+  const search = document.getElementById('search');
+  const filter = document.getElementById('activity-filter');
+  const count = document.getElementById('count');
+  const home = document.getElementById('home');
+  const dist = document.getElementById('dist');
+  let homePos = null;
+  let maxKm = null;
+  const acts = new Set(cards.map(c => c.dataset.activity).filter(Boolean));
+  [...acts].sort().forEach(a => {
+    const opt = document.createElement('option');
+    opt.value = a; opt.textContent = a;
+    filter.appendChild(opt);
+  });
+  function haversine(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.sin(dLon/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(a));
+  }
+  async function geocodeHome(addr) {
+    const url = 'https://ws.geonorge.no/adresser/v1/sok?sok=' + encodeURIComponent(addr) + '&side=0';
+    const r = await fetch(url);
+    const d = await r.json();
+    if (d.adresser && d.adresser.length) {
+      const t = d.adresser[0];
+      const p = t.representasjonspunkt;
+      return { lat: p.lat, lon: p.lon, label: t.adressetekst + ', ' + t.postnummer + ' ' + t.poststed };
+    }
+    return null;
+  }
+  async function useGeo() {
+    if (!navigator.geolocation) { alert('Nettleseren din støtter ikke geolokalisering.'); return; }
+    const km = parseFloat(dist.value);
+    if (!km) { alert('Fyll inn maks avstand i km først.'); return; }
+    count.textContent = 'Henter din plassering...';
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        homePos = { lat: pos.coords.latitude, lon: pos.coords.longitude, label: 'Min plassering' };
+        maxKm = km;
+        home.value = 'Min plassering';
+        count.textContent = 'Plassering hentet. Søker i nærheten...';
+        apply();
+      },
+      (err) => {
+        count.textContent = 'Kunne ikke hente plassering: ' + (err.message || err.code);
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 30000 }
+    );
+  }
+  async function useDist() {
+    const addr = home.value.trim();
+    const km = parseFloat(dist.value);
+    if (!addr || !km) { alert('Skriv inn din adresse og maks avstand i km.'); return; }
+    if (addr === 'Min plassering' && homePos) { maxKm = km; apply(); return; }
+    count.textContent = 'Geokoder adresse…';
+    const pos = await geocodeHome(addr);
+    if (!pos) { count.textContent = 'Fant ikke adressen – prøv med postnummer (f.eks. 1383 Asker).'; return; }
+    homePos = pos;
+    maxKm = km;
+    home.value = pos.label;
+    apply();
+  }
+  function clearFilters() {
+    search.value = '';
+    filter.value = '';
+    home.value = '';
+    homePos = null;
+    maxKm = null;
+    apply();
+  }
+  function apply() {
+    const q = search.value.toLowerCase().trim();
+    const a = filter.value;
+    let shown = 0;
+    cards.forEach(c => {
+      const matchQ = !q || c.dataset.name.includes(q) || c.dataset.activity.includes(q) || c.dataset.desc.includes(q) || (c.dataset.address || '').includes(q);
+      const matchA = !a || c.dataset.activity === a;
+      let matchD = true;
+      const d = c.querySelector('.dist-badge');
+      if (d) d.remove();
+      if (homePos && maxKm) {
+        if (c.dataset.lat) {
+          const km = haversine(homePos.lat, homePos.lon, parseFloat(c.dataset.lat), parseFloat(c.dataset.lon));
+          matchD = km <= maxKm;
+          if (matchD) {
+            const b = document.createElement('span');
+            b.className = 'dist-badge';
+            b.textContent = km.toFixed(1) + ' km';
+            c.querySelector('.card-body').appendChild(b);
+          }
+        } else {
+          const b = document.createElement('span');
+          b.className = 'dist-badge dist-ukjent';
+          b.textContent = 'Avstand ukjent';
+          c.querySelector('.card-body').appendChild(b);
+        }
+      }
+      const show = matchQ && matchA && matchD;
+      c.classList.toggle('hidden', !show);
+      if (show) shown++;
+    });
+    let txt = shown + ' av ' + cards.length + ' tilbud';
+    if (homePos) txt += ' innen ' + maxKm + ' km fra ' + home.value;
+    count.textContent = txt;
+  }
+  search.addEventListener('input', () => apply());
+  filter.addEventListener('change', () => apply());
+  dist.addEventListener('keydown', e => { if (e.key === 'Enter') useDist(); });
+  home.addEventListener('keydown', e => { if (e.key === 'Enter') useDist(); });
+  apply();
+  /* ============ KART ============ */
+  const mapWrap = document.getElementById('map-wrap');
+  const mapEl = document.getElementById('map');
+  const btnList = document.getElementById('btn-list');
+  const btnMap = document.getElementById('btn-map');
+  let map = null, markerLayer = null, mapInitialized = false;
+  let activeView = 'list';
+  const CAT_COLORS = {"kjede": "#1a5fb4", "frittstende": "#27ae60", "rehabilitering": "#8e44ad", "idrettslag": "#e67e22", "kommunalt senter": "#2e86c1", "hotell/treningsrom": "#c0392b"};
+  const fallbackColors = ['#1a5fb4','#e74c3c','#27ae60','#f39c12','#8e44ad','#16a085','#c0392b','#2e86c1','#d4ac0d','#e67e22'];
+  const catColor = new Map();
+  let color_i = 0;
+  function colorFor(act){ act = (act||'').toLowerCase(); if(catColor.has(act)) return catColor.get(act); const c = CAT_COLORS[act] || fallbackColors[color_i++ % fallbackColors.length]; catColor.set(act,c); return c; }
+  function initMap() {
+    if (mapInitialized) return;
+    if (typeof L === 'undefined') { mapEl.innerHTML = '<p style="padding:1rem;">Kart kunne ikke lastes (Leaflet manglet). Listen fungerer som normalt.</p>'; mapWrap.classList.remove('hidden'); return; }
+    map = L.map('map').setView([59.825, 10.47], 12);
+    map.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    mapInitialized = true;
+    setMapViewport();
+  }
+  function setMapViewport() { if (map) setTimeout(() => map.invalidateSize(), 60); }
+  function buildMarkers() {
+    if (!map) return;
+    if (markerLayer) { map.removeLayer(markerLayer); markerLayer = null; }
+    const group = L.layerGroup();
+    const shown = [];
+    cards.forEach(c => {
+      const show = !c.classList.contains('hidden');
+      if (!show || !c.dataset.lat) return;
+      const col = colorFor(c.dataset.activity);
+      const icon = L.divIcon({ html: '<div style="width:22px;height:22px;border-radius:50%;background:' + col + ';border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);"></div>', className:'', iconSize:[22,22], iconAnchor:[11,11] });
+      const a = c.querySelector('a[href$=".html"]');
+      const href = a ? a.getAttribute('href') : '#';
+      const m = L.marker([parseFloat(c.dataset.lat), parseFloat(c.dataset.lon)], { icon: icon });
+      m.bindPopup('<div style="min-width:160px;"><span class="popup-club">' + escapeHtml(c.querySelector('h3').textContent) + '</span><br><span style="font-size:.85rem;color:#555;">' + escapeHtml(c.dataset.activity) + '</span><br><span style="font-size:.8rem;color:#777;">' + escapeHtml(c.dataset.address||'') + '</span><br><a class="popup-link" href="' + href + '">Se senter &rarr;</a></div>');
+      group.addLayer(m);
+      shown.push(m);
+    });
+    markerLayer = group;
+    group.addTo(map);
+    if (shown.length > 0) {
+      const g = L.featureGroup(shown);
+      if (mapInitialized) { try {
+        if (search.value.trim() || filter.value || (homePos && maxKm)) {
+          map.fitBounds(g.getBounds().pad(0.02), { maxZoom: 14 });
+        } else {
+          const c = [59.825, 10.47];
+          map.setView(c, map.getBoundsZoom(L.latLng(c).toBounds(5000)));
+        }
+      } catch(e){} }
+    }
+  }
+  function escapeHtml(s) { return String(s||'').replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+  function updateMap() { if (mapInitialized) buildMarkers(); }
+  function setView(v) {
+    const isMap = v === 'map';
+    if (isMap) {
+      grid.classList.add('hidden');
+      mapWrap.classList.remove('hidden');
+      mapWrap.style.height = '560px';
+      mapWrap.style.overflow = 'visible';
+      mapWrap.style.margin = '1rem auto 2rem';
+      mapWrap.style.padding = '0 1rem';
+      void mapWrap.offsetHeight;
+      initMap();
+      if (map) map.invalidateSize();
+      buildMarkers();
+    } else {
+      grid.classList.remove('hidden');
+      mapWrap.classList.add('hidden');
+      mapWrap.style.height = '';
+      mapWrap.style.overflow = '';
+      mapWrap.style.margin = '';
+      mapWrap.style.padding = '';
+    }
+    btnList.classList.toggle('active', !isMap);
+    btnMap.classList.toggle('active', isMap);
+    btnList.setAttribute('aria-selected', String(!isMap));
+    btnMap.setAttribute('aria-selected', String(isMap));
+    setMapViewport();
+  }  btnMap.addEventListener('click', () => { activeView = 'map'; setView('map'); });
+  btnList.addEventListener('click', () => { activeView = 'list'; setView('list'); });
+  // Legg til kategorilegend
+  (function(){
+    const leg = document.getElementById('cat-legend');
+    const acts = Array.from(new Set(cards.map(c => (c.dataset.activity||'').toLowerCase()).filter(Boolean))).sort();
+    acts.forEach(a => { const s = document.createElement('span'); const d = document.createElement('span'); d.className='cat-dot'; d.style.background = colorFor(a); s.appendChild(d); s.appendChild(document.createTextNode(' ' + a)); leg.appendChild(s); });
+  })();
+  // wrapper apply() så kartet alltid er synkronisert
+  const origApply = apply;
+  apply = function(){ origApply(); updateMap(); };
+</script>
+</body>
+</html>
