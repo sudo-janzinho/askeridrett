@@ -61,6 +61,29 @@
   .toolbar { max-width: 900px; margin: .9rem auto 0; padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; gap: .6rem; flex-wrap: wrap; }
   .toolbar .count { margin: 0; padding: 0; }
   .dist-badge.dist-ukjent { background: #ececec; color: #777; }
+  .tilbud-sec { max-width: 900px; margin: 0 auto 1.5rem; padding: 0 1rem; }
+  .tilbud-box { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); padding: 1.2rem 1.4rem; }
+  .tilbud-box h2 { font-size: 1.15rem; color: var(--dark); margin-bottom: .25rem; }
+  .tilbud-box .sub { font-size: .82rem; color: #666; margin-bottom: .8rem; }
+  .tilbud-grid { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .tilbud-link { display: inline-block; background: #eef3f9; color: var(--dark); text-decoration: none; font-size: .85rem; font-weight: 600; padding: .45rem .9rem; border-radius: 18px; border: 1px solid #d8e2ee; }
+  .tilbud-link:hover { background: var(--dark); color: #fff; }
+  .cmp-sec { max-width: 900px; margin: 0 auto 2rem; padding: 0 1rem; }
+  .cmp-wrap { background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.08); padding: 1.2rem; overflow-x: auto; }
+  .cmp-wrap h2 { font-size: 1.15rem; color: var(--dark); margin-bottom: .25rem; }
+  .cmp-wrap .sub { font-size: .82rem; color: #666; margin-bottom: .8rem; }
+  table.cmp { width: 100%; border-collapse: collapse; font-size: .85rem; min-width: 720px; }
+  table.cmp th { background: var(--dark); color: #fff; text-align: left; padding: .55rem .7rem; white-space: nowrap; }
+  table.cmp td { padding: .55rem .7rem; border-bottom: 1px solid #e3e7ee; vertical-align: top; }
+  table.cmp tr:nth-child(even) td { background: #f7f9fc; }
+  table.cmp .t-navn { font-weight: 600; white-space: nowrap; }
+  table.cmp .t-navn a { color: var(--dark); text-decoration: none; }
+  table.cmp .t-navn a:hover { text-decoration: underline; }
+  .t247 { display: inline-block; background: #e6f6ec; color: #0a7d33; font-weight: 700; font-size: .78rem; padding: .12rem .5rem; border-radius: 10px; white-space: nowrap; }
+  .t-link { color: var(--dark); font-weight: 600; text-decoration: none; white-space: nowrap; }
+  .t-link:hover { text-decoration: underline; }
+  .ext-btn { display: inline-block; background: #eef3f9; color: var(--dark); text-decoration: none; font-weight: 600; font-size: .9rem; padding: .55rem 1.2rem; border-radius: 20px; border: 1px solid #d8e2ee; }
+  .ext-btn:hover { background: var(--dark); color: #fff; }
 </style>
 </head>
 <body>
@@ -293,6 +316,59 @@
       <div id="map"></div>
       <p class="map-tip">Kartet synkroniserer med søk og filter. Zoom inn for å se hvert enkelt senter. Trykk på en markør for mer info, eller knappen "Søk i nærheten" for å vise sentre rundt deg.</p>
     </div>
+    <section class="tilbud-sec"><div class="tilbud-box">
+      <h2>Tilbud og gratis prøvetiden</h2>
+      <p class="sub">Direkte hos sentrene – tilbud endres ofte, sjekk deres egne sider.</p>
+      <div class="tilbud-grid">
+      <a class="tilbud-link" href="https://evofitness.no/senter/asker-sentrum/" target="_blank" rel="noopener">EVO – prøv gratis &rarr;</a>
+      <a class="tilbud-link" href="https://www.actic.no/finn-sentre/gym-asker/asker-lensmannslia/" target="_blank" rel="noopener">Actic – gratis prøvetrening &rarr;</a>
+      <a class="tilbud-link" href="https://feel24.no/treningssentre/treningssenter-asker/langenga" target="_blank" rel="noopener">Feel24 – se tilbud &rarr;</a>
+      <a class="tilbud-link" href="https://www.mova.no/treningssenter/saetre" target="_blank" rel="noopener">MOVA – se tilbud &rarr;</a>
+      <a class="tilbud-link" href="https://ordentliggym.no/" target="_blank" rel="noopener">Ordentlig Gym – gratis prøve &rarr;</a>
+      <a class="tilbud-link" href="https://www.sportytrening.no/" target="_blank" rel="noopener">Sporty – se tilbud &rarr;</a>
+      <a class="tilbud-link" href="https://www.puls1.no/" target="_blank" rel="noopener">Puls1 – se tilbud &rarr;</a>
+      <a class="tilbud-link" href="https://www.roykenbadet.no/" target="_blank" rel="noopener">Røykenbadet – se tilbud &rarr;</a>
+      <a class="tilbud-link" href="https://www.sats.no/treningssenter/asker-og-baerum/asker" target="_blank" rel="noopener">SATS – se priser &rarr;</a>
+      </div>
+    </div></section>
+    <section class="cmp-sec"><div class="cmp-wrap">
+      <h2>Sammenlign alle treningssentre</h2>
+      <p class="sub">Åpningstider og tjenester fra sentrenes egne sider. Priser varierer – se sentrets egen side.</p>
+      <table class="cmp">
+      <thead><tr><th>Senter</th><th>Sted</th><th>Åpningstider</th><th>Merknad</th></tr></thead>
+      <tbody>
+      <tr><td class="t-navn"><a href="evo-asker-sentrum.html">EVO Asker Sentrum</a></td><td>Asker</td><td><span class="t247" style="background:#eef3f9;color:#1c3f6e;">05–24</span></td><td>Gratis prøvetrening</td></tr>
+      <tr><td class="t-navn"><a href="friskvernaktiv.html">FriskvernAktiv (Unicare)</a></td><td>Asker</td><td><a class="t-link" href="https://unicare.no/treningssentre/friskvernaktiv/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Rehabilitering, gruppe + PT</td></tr>
+      <tr><td class="t-navn"><a href="sats-asker.html">SATS Asker</a></td><td>Asker</td><td><a class="t-link" href="https://www.sats.no/treningssenter/asker-og-baerum/asker" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT</td></tr>
+      <tr><td class="t-navn"><a href="actic-asker.html">Actic Asker</a></td><td>Asker</td><td><a class="t-link" href="https://www.actic.no/finn-sentre/gym-asker/asker-lensmannslia/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT, gratis prøve</td></tr>
+      <tr><td class="t-navn"><a href="feel24-asker.html">Feel24 Asker (Langenga)</a></td><td>Asker</td><td><span class="t247">24/7</span></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="evo-asker.html">EVO Asker</a></td><td>Asker</td><td><span class="t247" style="background:#eef3f9;color:#1c3f6e;">05–24</span></td><td>Gratis prøvetrening</td></tr>
+      <tr><td class="t-navn"><a href="feel24-heggedal.html">Feel24 Heggedal</a></td><td>Heggedal</td><td><span class="t247">24/7</span></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="feelgood-heggedal.html">Feelgood Heggedal</a></td><td>Heggedal</td><td><a class="t-link" href="https://www.feelgood.no/heggedal" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>–</td></tr>
+      <tr><td class="t-navn"><a href="feel24-vollen.html">Feel24 Vollen</a></td><td>Vollen</td><td><span class="t247">24/7</span></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="mova-nesbru.html">MOVA Nesbru</a></td><td>Nesbru</td><td><span class="t247">24/7</span></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="nesbru-trim-og-helse.html">Nesbru Trim &amp; Helse</a></td><td>Nesbru</td><td><a class="t-link" href="https://nesbruhelse.no/trening/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT</td></tr>
+      <tr><td class="t-navn"><a href="ordentlig-gym.html">Ordentlig Gym</a></td><td>Hvalstad</td><td><span class="t247">24/7</span></td><td>Gratis prøvetrening</td></tr>
+      <tr><td class="t-navn"><a href="treningsverket.html">Treningsverket</a></td><td>Hvalstad</td><td><a class="t-link" href="https://treningsverket.no/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>–</td></tr>
+      <tr><td class="t-navn"><a href="asker-squash-og-fitness.html">Asker Squash og Fitness</a></td><td>Hvalstad</td><td>–</td><td>Squash og trening</td></tr>
+      <tr><td class="t-navn"><a href="feel24-billingstad.html">Feel24 Billingstad</a></td><td>Billingstad</td><td><span class="t247">24/7</span></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="sats-billingstad.html">SATS Billingstad</a></td><td>Billingstad</td><td><a class="t-link" href="https://www.sats.no/treningssenter/asker-og-baerum/billingstad" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT</td></tr>
+      <tr><td class="t-navn"><a href="sporty-trening-spikkestad.html">Sporty Trening Spikkestad</a></td><td>Spikkestad</td><td><a class="t-link" href="https://www.sportytrening.no/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="spuvi.html">SPUVI</a></td><td>Spikkestad</td><td><a class="t-link" href="https://facebook.com/p/Spuvi-100057414521143/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Idrettslag</td></tr>
+      <tr><td class="t-navn"><a href="roykenbadet.html">Røykenbadet</a></td><td>Røyken</td><td><a class="t-link" href="https://www.roykenbadet.no/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Svømmehall og trening</td></tr>
+      <tr><td class="t-navn"><a href="sats-slemmestad.html">SATS Slemmestad</a></td><td>Slemmestad</td><td><a class="t-link" href="https://www.sats.no/treningssenter/asker-og-baerum/slemmestad" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT</td></tr>
+      <tr><td class="t-navn"><a href="actic-slemmestad.html">Actic Slemmestad</a></td><td>Slemmestad</td><td><a class="t-link" href="https://www.actic.no/finn-sentre/gym-asker/actic-slemmestad/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT, gratis prøve</td></tr>
+      <tr><td class="t-navn"><a href="feel24-slemmestad.html">Feel24 Slemmestad</a></td><td>Slemmestad</td><td><span class="t247">24/7</span></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="mova-saetre.html">MOVA Sætre</a></td><td>Sætre</td><td><span class="t247">24/7</span></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="trento-royken-og-hurum.html">Trento Røyken &amp; Hurum</a></td><td>Sætre</td><td><span class="t247">24/7</span></td><td>En del av MOVA</td></tr>
+      <tr><td class="t-navn"><a href="feelgood-saetre.html">Feelgood Sætre</a></td><td>Sætre</td><td><a class="t-link" href="https://www.feelgood.no/saetre" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>–</td></tr>
+      <tr><td class="t-navn"><a href="kraftverket-saetre.html">3475 Kraftverket</a></td><td>Sætre</td><td><a class="t-link" href="https://3475kraftverket.no/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Trening og CrossFit</td></tr>
+      <tr><td class="t-navn"><a href="puls1.html">Puls1</a></td><td>Tofte</td><td><a class="t-link" href="https://www.puls1.no/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Gruppetrening, PT, tilbud</td></tr>
+      <tr><td class="t-navn"><a href="feelgood-senter-tofte.html">Feelgood Senter Tofte</a></td><td>Tofte</td><td><a class="t-link" href="https://www.feelgood.no/tofte" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>–</td></tr>
+      <tr><td class="t-navn"><a href="holmsbu-resort-treningsrom.html">Holmsbu Resort (treningsrom)</a></td><td>Holmsbu</td><td><a class="t-link" href="https://holmsburesort.no/" target="_blank" rel="noopener">Se åpningstider &rarr;</a></td><td>Hotell – for gjester</td></tr>
+      </tbody>
+      </table>
+    </div></section>
     <footer>Åpningstider og tilbud kan endres. Sjekk sentrets egen nettside for oppdatert info.</footer>
 <script>
   const cards = [...document.querySelectorAll('.card')];
