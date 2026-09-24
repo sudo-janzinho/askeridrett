@@ -11,6 +11,30 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--light); color: #222; }
   header { background: url('askeridrett-fjord-banner.svg') center/cover no-repeat; background-color: var(--blue); color: #000; padding: 3.5rem 1rem 1.5rem; text-align: center; }
+  /* NYHET: treningssentre-badge øverst til venstre i banneren */
+  header { position: relative; }
+  .nyhet-gym {
+    position: absolute; top: 14px; left: 16px;
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: #fff; color: var(--dark);
+    border: 2px solid var(--dark); border-radius: 10px;
+    padding: .45rem .85rem; font-size: .85rem; font-weight: 700;
+    text-decoration: none; white-space: nowrap;
+    transform: rotate(-4deg);
+    box-shadow: 0 3px 10px rgba(0,0,0,.18);
+    transition: transform .18s ease, box-shadow .18s ease;
+    z-index: 5;
+  }
+  .nyhet-gym:hover { transform: rotate(0deg) scale(1.04); box-shadow: 0 5px 16px rgba(0,0,0,.26); }
+  .nyhet-gym .tag {
+    background: #e02424; color: #fff; font-size: .62rem; font-weight: 800;
+    letter-spacing: .06em; padding: .15rem .4rem; border-radius: 4px;
+    text-transform: uppercase;
+  }
+  @media (max-width: 620px) {
+    .nyhet-gym { position: static; display: flex; justify-content: center; margin: 0 auto .7rem; transform: rotate(-2deg); white-space: normal; }
+    header { padding-top: 1.6rem; }
+  }
   .kicker { font-size: .85rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: #000; opacity: .75; margin-bottom: .3rem; }
   header h1 { font-size: 1.6rem; margin-bottom: .3rem; }
   header p { opacity: .9; font-size: .95rem; }
@@ -65,6 +89,9 @@
 </head>
 <body>
 <header>
+  <a class="nyhet-gym" href="treningssentre_asker.html" title="Se alle treningssentre i Asker">
+    <span class="tag">Nyhet</span> 🏋️ Treningssentre i Asker
+  </a>
   <p class="kicker">Mellom to fjorder</p>
   <h1>Fritidsaktiviteter i Asker</h1>
   <p class="intro">Finn din neste fritidsaktivitet i Asker.</p>
