@@ -63,6 +63,8 @@
   /* Kartbeholder: skjult visuelt, men ~beholder høyde~ så Leaflet kan måle den ved init. */
   .map-collapsed { height: 0; overflow: hidden; padding: 0; margin: 0 !important; }
   footer { text-align: center; padding: 1.5rem; color: #888; font-size: .8rem; }
+  .ikon-kreditt { margin: .9rem 0 0; font-size: .7rem; color: #b7c0ca; line-height: 1.6; }
+  .ikon-kreditt a { color: #b7c0ca; text-decoration: underline; }
   /* URL-länkar visas på en rad, klipps med "..." om för långa */
   /* --- Kartvisning --- */
   .view-switch { display: inline-flex; gap: .25rem; background: #eef3f9; border: 1px solid #d8e2ee; border-radius: 24px; padding: .25rem; }
@@ -1125,7 +1127,9 @@
       <div id="map"></div>
       <p class="map-tip">Kartet synkroniserer med søk og filter. Zoom inn for å se hver enkelt klubb. Trykk på en markør for mer info, eller knappen "Søk i nærheten" for å vise klubber rundt deg.</p>
     </div>
-    <footer>Kontaktpersoner kan være utdatert. Sjekk klubbens egen nettside for oppdatert info.<br><a href="ny-klubb.html" style="color:var(--dark);font-weight:600;">Mangler en klubb? Legg den til her &rarr;</a></footer>
+    <footer>Kontaktpersoner kan være utdatert. Sjekk klubbens egen nettside for oppdatert info.<br><a href="ny-klubb.html" style="color:var(--dark);font-weight:600;">Mangler en klubb? Legg den til her &rarr;</a>
+      <p class="ikon-kreditt">Sport-ikoner: <a href="https://fontawesome.com" target="_blank" rel="noopener">Font Awesome Free 6</a> (CC BY 4.0), <a href="https://pictogrammers.com" target="_blank" rel="noopener">Material Design Icons</a> (Apache 2.0) og <a href="https://iconify.design" target="_blank" rel="noopener">Pinhead</a> (CC0 1.0). &Oslash;vrige ikoner: egne tegninger.</p>
+    </footer>
 <script>
   const cards = [...document.querySelectorAll('.card')];
   const search = document.getElementById('search');
