@@ -1,0 +1,18 @@
+# Lokale arbeidsfiler — skal ALDRI til GitHub Pages
+_arbeidsfiler/
+research/
+_shots/
+_bandy-*.png
+_footer-*.png
+_kort-*.png
+_zoom_test.png
+
+# Backup og eksperimentfiler
+*.bak
+*.bak-*
+* - Copy.html
+index[0-9]*.html
+
+# Systemfiler
+.DS_Store
+Thumbs.db
